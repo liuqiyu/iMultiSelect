@@ -14,9 +14,7 @@ try{
 				inputId     :"id",
 				inputname   :"name",
 				inputClass  :"class",
-				defaultValue:[
-					
-				],
+				defaultValue:[],
 				results     :[
 					{
 						"id"  :'1',
@@ -31,45 +29,41 @@ try{
 						"name":"a3"
 					},
 					{
-						"id"  :"3",
-						"name":"a3"
+						"id"  :"4",
+						"name":"a4"
 					},
 					{
-						"id"  :"3",
-						"name":"a3"
+						"id"  :"5",
+						"name":"a5"
 					},
 					{
-						"id"  :"3",
-						"name":"a3"
+						"id"  :"6",
+						"name":"a6"
 					},
 					{
-						"id"  :"3",
-						"name":"a3"
+						"id"  :"7",
+						"name":"a7"
 					},
 					{
-						"id"  :"3",
-						"name":"a3"
+						"id"  :"8",
+						"name":"a9"
 					},
 					{
-						"id"  :"3",
-						"name":"a3"
-					},
-					{
-						"id"  :"3",
-						"name":"a3"
+						"id"  :"9",
+						"name":"a9"
 					}
 				]
 			};
 			var opts               = $.extend(defaults, options);  // 重载原型：options的参数覆盖defaults的参数
 			/**
-			 * 模板
+			 * 模板 1
 			 * 整个外部框架
 			 * @type {string}
 			 * @private
 			 */
-			var _templeteWrap      = "<input type=\"hidden\" id=\"$inputId\" name=\"$inputName\">\n<div class=\"iceman-multi-showbox\">\n\t<input type=\"text\" class=\"default-input $inputClass\" value=\"$value\">\n\t<span class=\"icon-direction icon-caret-down\"><i></i></span>\n</div>\n<div class=\"iceman-multi-dropdown hide\">\n\t<div class=\"iceman-multi-dropdown-header\">\n\t\t<a href=\"javascript:void(0)\" class=\"iceman-multi-dropdown-a check-all clearfix\">\n\t\t\t\t<span class=\"iceman-multi-dropdown-check\">\n\t\t\t\t\t<input type=\"checkbox\" class=\"iceman-multi-dropdown-check-all\">\n\t\t\t\t</span> <span class=\"iceman-multi-dropdown-desc\">全选</span> </a>\n\t</div>\n\t<div class=\"iceman-multi-dropdown-body\">\n\t\t<ul>\n\t\t\t$list\n\t\t</ul>\n\t</div>\n</div>"
+			var _templeteWrap      = "<input type=\"hidden\" id=\"$inputId\" name=\"$inputName\">\n<div class=\"iceman-multi-showbox\">\n\t<input type=\"text\" class=\"default-input $inputClass\" value=\"$value\" readonly>\n\t<span class=\"icon-direction icon-caret-down\"><i></i></span>\n</div>\n<div class=\"iceman-multi-dropdown hide\">\n\t<div class=\"iceman-multi-dropdown-header\">\n\t\t<a href=\"javascript:void(0)\" class=\"iceman-multi-dropdown-a check-all clearfix\">\n\t\t\t\t<span class=\"iceman-multi-dropdown-check\">\n\t\t\t\t\t<input type=\"checkbox\" class=\"iceman-multi-dropdown-check-all\">\n\t\t\t\t</span> <span class=\"iceman-multi-dropdown-desc\">全选</span> </a>\n\t</div>\n\t<div class=\"iceman-multi-dropdown-body\">\n\t\t<ul>\n\t\t\t$list\n\t\t</ul>\n\t</div>\n</div>"
 			/**
-			 * 模板
+			 * 模板 2
 			 * 下拉列表
 			 * @type {string}
 			 * @private
@@ -109,6 +103,7 @@ try{
 					}else{
 						$(this).addClass('selected').find('input[type=checkbox]').prop('checked', true);
 					}
+					_setVal();
 				});
 				/**
 				 * 点击checkbox 判断是否被选中
@@ -120,6 +115,7 @@ try{
 					}else{
 						$(this).parents('.iceman-multi-dropdown-list').removeClass('selected');
 					}
+					_setVal();
 				});
 				/**
 				 * 全选操作
@@ -134,11 +130,25 @@ try{
 							$(this).removeClass('selected').find('input[type=checkbox]').prop('checked', false);
 						});
 					}
+					_setVal();
 				});
 			};
 			var _unbindEvent       = function(){
 				_self.find('.iceman-multi-showbox').off('click');
 				_self.find('.check-one').off('click');
+			};
+			var _setVal            = function(){
+				var arrTxt = [], arrId = [];
+				_self.find('.check-one').each(function(){
+					if($(this).find('input[type=checkbox]').prop('checked')){
+						var txt = $(this).find('.iceman-multi-dropdown-desc').text();
+						var id  = $(this).attr('data-id');
+						arrTxt.push(txt);
+						arrId.push(id);
+					}
+				});
+				_self.find('.default-input').val(arrTxt);
+				_self.find('input[type=hidden]').val(arrId);
 			};
 			/**
 			 * 初始化 写入组件 init
